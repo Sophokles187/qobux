@@ -1,0 +1,66 @@
+{
+  "name": "qobux",
+  "version": "1.0.0",
+  "description": "An unofficial desktop client for the Qobuz music streaming service, built with Electron for Linux",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "concurrently \"npm run build:watch\" \"npm run electron:dev\"",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "electron:dev": "wait-on dist/main.js && electron .",
+    "start": "electron .",
+    "dist": "npm run build && electron-builder",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "qobuz",
+    "music",
+    "streaming",
+    "electron",
+    "desktop",
+    "linux"
+  ],
+  "author": "Qobux Contributors",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "concurrently": "^9.1.0",
+    "electron": "^37.2.3",
+    "electron-builder": "^26.0.12",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.3",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.qobux.app",
+    "productName": "Qobux",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "flatpak",
+          "arch": ["x64"]
+        }
+      ],
+      "category": "AudioVideo",
+      "icon": "assets/icon.png"
+    },
+    "flatpak": {
+      "baseVersion": "23.08",
+      "runtime": "org.freedesktop.Platform",
+      "runtimeVersion": "23.08",
+      "sdk": "org.freedesktop.Sdk"
+    }
+  }
+}
