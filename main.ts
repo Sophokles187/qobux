@@ -1,12 +1,40 @@
-import { app, BrowserWindow, Tray, Menu, nativeImage } from 'electron';
+import { app, BrowserWindow, Tray, Menu, nativeImage, Notification, ipcMain } from 'electron';
 import * as path from 'path';
+import * as fs from 'fs';
+
+interface AppSettings {
+  notificationsEnabled: boolean;
+}
 
 class QobuxApp {
   private mainWindow: BrowserWindow | null = null;
   private tray: Tray | null = null;
+  private settings: AppSettings = { notificationsEnabled: true };
+  private settingsPath: string;
 
   constructor() {
+    this.settingsPath = path.join(app.getPath('userData'), 'settings.json');
+    this.loadSettings();
     this.setupApp();
+  }
+
+  private loadSettings(): void {
+    try {
+      if (fs.existsSync(this.settingsPath)) {
+        const data = fs.readFileSync(this.settingsPath, 'utf8');
+        this.settings = { ...this.settings, ...JSON.parse(data) };
+      }
+    } catch (error) {
+      // Use defaults on error
+    }
+  }
+
+  private saveSettings(): void {
+    try {
+      fs.writeFileSync(this.settingsPath, JSON.stringify(this.settings, null, 2));
+    } catch (error) {
+      console.error('Qobux: Could not save settings:', error);
+    }
   }
 
   private setupApp(): void {
@@ -14,7 +42,8 @@ class QobuxApp {
     app.whenReady().then(() => {
       this.createWindow();
       this.createTray();
-      
+      this.setupIPC();
+
       app.on('activate', () => {
         // On macOS it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.
@@ -38,6 +67,39 @@ class QobuxApp {
         return { action: 'deny' };
       });
     });
+  }
+
+  private setupIPC(): void {
+    // Handle notification requests from renderer
+    ipcMain.on('show-notification', (event, data) => {
+      if (this.settings.notificationsEnabled) {
+        this.showNotification(data.title, data.body);
+      }
+    });
+
+    // Handle settings requests
+    ipcMain.handle('get-settings', () => {
+      return this.settings;
+    });
+  }
+
+  private showNotification(title: string, body: string): void {
+    if (!Notification.isSupported()) {
+      return;
+    }
+
+    try {
+      const notification = new Notification({
+        title: title,
+        body: body,
+        icon: path.join(__dirname, '../assets/icon.png'),
+        silent: false
+      });
+
+      notification.show();
+    } catch (error) {
+      // Notification failed, but don't spam console
+    }
   }
 
   private createWindow(): void {
@@ -129,6 +191,17 @@ class QobuxApp {
       },
       { type: 'separator' },
       {
+        label: 'Notifications',
+        type: 'checkbox',
+        checked: this.settings.notificationsEnabled,
+        click: () => {
+          this.settings.notificationsEnabled = !this.settings.notificationsEnabled;
+          this.saveSettings();
+          this.updateTrayMenu(); // Refresh menu to show new state
+        }
+      },
+      { type: 'separator' },
+      {
         label: 'Quit',
         click: () => {
           app.isQuiting = true;
@@ -144,6 +217,12 @@ class QobuxApp {
     this.tray.on('click', () => {
       this.toggleWindow();
     });
+  }
+
+  private updateTrayMenu(): void {
+    if (this.tray) {
+      this.createTray(); // Recreate tray menu with updated settings
+    }
   }
 
   private showWindow(): void {
@@ -167,12 +246,8 @@ class QobuxApp {
   }
 
   private sendMediaCommand(command: string): void {
-    console.log('Qobux Main: Sending media command:', command);
     if (this.mainWindow) {
-      console.log('Qobux Main: Window exists, sending IPC message');
       this.mainWindow.webContents.send('media-command', command);
-    } else {
-      console.log('Qobux Main: No window available');
     }
   }
 }
