@@ -221,7 +221,61 @@ class QobuxApp {
 
   private updateTrayMenu(): void {
     if (this.tray) {
-      this.createTray(); // Recreate tray menu with updated settings
+      // Only update the context menu, don't recreate the entire tray
+      const contextMenu = Menu.buildFromTemplate([
+        {
+          label: 'Show Qobux',
+          click: () => {
+            this.showWindow();
+          }
+        },
+        {
+          label: 'Hide Qobux',
+          click: () => {
+            this.mainWindow?.hide();
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Play/Pause',
+          click: () => {
+            this.sendMediaCommand('playpause');
+          }
+        },
+        {
+          label: 'Next Track',
+          click: () => {
+            this.sendMediaCommand('next');
+          }
+        },
+        {
+          label: 'Previous Track',
+          click: () => {
+            this.sendMediaCommand('previous');
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Notifications',
+          type: 'checkbox',
+          checked: this.settings.notificationsEnabled,
+          click: () => {
+            this.settings.notificationsEnabled = !this.settings.notificationsEnabled;
+            this.saveSettings();
+            this.updateTrayMenu(); // Refresh menu to show new state
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Quit',
+          click: () => {
+            app.isQuiting = true;
+            app.quit();
+          }
+        }
+      ]);
+
+      this.tray.setContextMenu(contextMenu);
     }
   }
 
