@@ -14,20 +14,13 @@ Qobux provides a native desktop experience for Qobuz streaming on Linux, featuri
 
 ## Features
 
-### Current Status
-This project is in early development. Planned features include:
-
-**MVP (Phase 1)**
 - [x] Basic Electron window with Qobuz web app
 - [x] System tray icon with basic controls  
 - [x] Window management (minimize/restore)
-- [x] AppImage packaging
+- [x] MPRIS support for media keys
+- [x] Desktop notifications
 
-**Version 1.0 (Phase 2)**
-- [ ] MPRIS support for media keys
-- [ ] Desktop notifications
-- [ ] Custom branding
-- [ ] Flatpak packaging
+
 
 
 ## Installation
