@@ -131,3 +131,21 @@ dist
 
 project-plan.md
 CLAUDE.md
+
+# Electron build outputs
+release/
+*.AppImage
+*.deb
+*.rpm
+*.dmg
+*.exe
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
