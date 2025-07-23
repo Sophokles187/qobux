@@ -20,9 +20,6 @@ Qobux provides a native desktop experience for Qobuz streaming on Linux, featuri
 - [x] MPRIS support for media keys
 - [x] Desktop notifications
 
-
-
-
 ## Installation
 
 *Installation packages will be available once development is complete.*
