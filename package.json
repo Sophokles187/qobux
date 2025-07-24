@@ -10,7 +10,8 @@
     "electron:dev": "wait-on dist/main.js && electron .",
     "start": "electron .",
     "dist": "npm run build && electron-builder",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "release": "scripts/prepare-release.sh"
   },
   "keywords": [
     "qobuz",

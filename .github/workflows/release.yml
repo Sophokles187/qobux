@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0, v1.1.0, etc.
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build application
+      run: npm run build
+      
+    - name: Build AppImage
+      run: npm run dist
+      
+    - name: Setup Flatpak
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y flatpak flatpak-builder
+        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+        flatpak install -y flathub org.freedesktop.Platform//24.08 org.freedesktop.Sdk//24.08
+        
+    - name: Build Flatpak
+      run: |
+        flatpak-builder --repo=repo --force-clean flatpak-build io.github.Sophokles187.qobux.yml
+        flatpak build-bundle repo qobux.flatpak io.github.Sophokles187.qobux
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          release/Qobux-*.AppImage
+          qobux.flatpak
+        body: |
+          ## Installation
+          
+          ### Flatpak (Recommended)
+          ```bash
+          flatpak install qobux.flatpak
+          flatpak run io.github.Sophokles187.qobux
+          ```
+          
+          ### AppImage
+          ```bash
+          chmod +x Qobux-*.AppImage
+          ./Qobux-*.AppImage
+          ```
+          
+          ## Changes
+          See commit history for detailed changes.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
