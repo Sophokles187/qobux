@@ -29,6 +29,15 @@ class QobuxApp {
     this.loadSettings();
   }
 
+  // Simple logging helpers
+  private log(message: string, ...args: any[]): void {
+    console.log(`[Qobux] ${message}`, ...args);
+  }
+
+  private logError(message: string, error?: any): void {
+    console.error(`[Qobux ERROR] ${message}`, error);
+  }
+
   private loadSettings(): void {
     try {
       if (fs.existsSync(this.settingsPath)) {
@@ -44,7 +53,7 @@ class QobuxApp {
     try {
       fs.writeFileSync(this.settingsPath, JSON.stringify(this.settings, null, 2));
     } catch (error) {
-      console.error('Qobux: Could not save settings:', error);
+      this.logError('Could not save settings:', error);
     }
   }
 
@@ -74,7 +83,7 @@ class QobuxApp {
     // Security: Prevent new window creation
     app.on('web-contents-created', (event, contents) => {
       contents.setWindowOpenHandler(({ url }) => {
-        console.log('Blocked new window creation to:', url);
+        this.log('Blocked new window creation to:', url);
         return { action: 'deny' };
       });
     });
