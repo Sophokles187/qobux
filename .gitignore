@@ -140,6 +140,12 @@ release/
 *.dmg
 *.exe
 
+# Flatpak build files
+flatpak-build/
+*.flatpak
+generated-sources.json
+.flatpak-builder/
+
 # OS specific files
 .DS_Store
 Thumbs.db

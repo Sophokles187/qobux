@@ -8,29 +8,35 @@ Qobux provides a native desktop experience for Qobuz streaming on Linux, featuri
 
 - [x] Electron window with Qobuz web app
 - [x] System tray icon with media controls  
-- [x] Window management (minimize to tray/restore)
 - [x] MPRIS support for media keys
 - [x] Desktop notifications
 
 ## Installation
 
-*Installation packages will be available once development is complete.*
+### Flatpak (Recommended)
+```bash
+# Install from local bundle
+flatpak install qobux.flatpak
 
-Planned distribution methods:
-- **Flatpak** via Flathub (primary)
-- **AppImage** for direct download
-- **AUR** package for Arch Linux users
+# Run the application
+flatpak run io.github.Sophokles187.qobux
+```
 
+### AppImage
+```bash
+# Download and run
+chmod +x Qobux-1.0.0.AppImage
+./Qobux-1.0.0.AppImage
+```
 
-## Flathub Preparation
-
-This project is being prepared for Flathub distribution. Current status:
-
-### ✅ Ready:
-- Application ID: `io.github.Sophokles187.qobux`
-- Runtime: `org.freedesktop.Platform 24.08`
-- GPL-3.0 License
-- GitHub repository
+### From Source
+```bash
+git clone https://github.com/Sophokles187/qobux.git
+cd qobux
+npm install
+npm run build
+npm start
+```
 
 ## Legal Notice
 
