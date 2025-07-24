@@ -6,14 +6,6 @@ An unofficial desktop client for the Qobuz music streaming service, built with E
 
 Qobux provides a native desktop experience for Qobuz streaming on Linux, featuring:
 
-- Native desktop window for the Qobuz web app
-- System tray integration
-- Media key support (MPRIS)
-- Desktop notifications for "Now Playing"
-- Minimize to tray functionality
-
-## Features
-
 - [x] Basic Electron window with Qobuz web app
 - [x] System tray icon with basic controls  
 - [x] Window management (minimize/restore)
@@ -29,38 +21,6 @@ Planned distribution methods:
 - **AppImage** for direct download
 - **AUR** package for Arch Linux users
 
-## Development
-
-### Prerequisites
-- Node.js (v18+)
-- npm or yarn
-- Linux development environment
-
-### Setup
-```bash
-# Clone the repository
-git clone <repository-url>
-cd qobux
-
-# Install dependencies
-npm install
-
-# Start development
-npm run dev
-
-# Build for production
-npm run build && npm start
-
-# Create distributable package
-npm run dist
-```
-
-## Technology Stack
-
-- **Electron** - Desktop app framework
-- **TypeScript** - Primary language
-- **Media Session API** - Cross-platform media controls integration
-- **Node.js** - Backend runtime
 
 ## Legal Notice
 
