@@ -47,9 +47,18 @@ class QobuxApp {
       if (fs.existsSync(this.settingsPath)) {
         const data = fs.readFileSync(this.settingsPath, 'utf8');
         this.settings = { ...this.settings, ...JSON.parse(data) };
+        this.log('Settings loaded successfully');
+      } else {
+        this.log('No settings file found, using defaults');
       }
     } catch (error) {
-      // Use defaults on error
+      if (error instanceof SyntaxError) {
+        this.logError('Settings file contains invalid JSON, using defaults', error);
+      } else if (error instanceof Error && error.message.includes('EACCES')) {
+        this.logError('Permission denied reading settings file, using defaults', error);
+      } else {
+        this.logError('Failed to load settings, using defaults', error);
+      }
     }
   }
 
