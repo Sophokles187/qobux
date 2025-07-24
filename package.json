@@ -53,6 +53,7 @@
       "category": "AudioVideo",
       "icon": "assets/icon.png"
     },
+    "publish": null,
     "flatpak": {
       "baseVersion": "24.08",
       "runtime": "org.freedesktop.Platform",
