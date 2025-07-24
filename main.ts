@@ -158,7 +158,19 @@ class QobuxApp {
     this.tray = new Tray(trayIcon);
     
     // Create context menu
-    const contextMenu = Menu.buildFromTemplate([
+    const contextMenu = Menu.buildFromTemplate(this.buildTrayMenuTemplate());
+
+    this.tray.setContextMenu(contextMenu);
+    this.tray.setToolTip('Qobux - Qobuz Desktop Client');
+
+    // Handle tray click
+    this.tray.on('click', () => {
+      this.toggleWindow();
+    });
+  }
+
+  private buildTrayMenuTemplate(): Electron.MenuItemConstructorOptions[] {
+    return [
       {
         label: 'Show Qobux',
         click: () => {
@@ -171,7 +183,7 @@ class QobuxApp {
           this.mainWindow?.hide();
         }
       },
-      { type: 'separator' },
+      { type: 'separator' as const },
       {
         label: 'Play/Pause',
         click: () => {
@@ -190,10 +202,10 @@ class QobuxApp {
           this.sendMediaCommand('previous');
         }
       },
-      { type: 'separator' },
+      { type: 'separator' as const },
       {
         label: 'Notifications',
-        type: 'checkbox',
+        type: 'checkbox' as const,
         checked: this.settings.notificationsEnabled,
         click: () => {
           this.settings.notificationsEnabled = !this.settings.notificationsEnabled;
@@ -201,7 +213,7 @@ class QobuxApp {
           this.updateTrayMenu(); // Refresh menu to show new state
         }
       },
-      { type: 'separator' },
+      { type: 'separator' as const },
       {
         label: 'Quit',
         click: () => {
@@ -209,73 +221,13 @@ class QobuxApp {
           app.quit();
         }
       }
-    ]);
-
-    this.tray.setContextMenu(contextMenu);
-    this.tray.setToolTip('Qobux - Qobuz Desktop Client');
-
-    // Handle tray click
-    this.tray.on('click', () => {
-      this.toggleWindow();
-    });
+    ];
   }
 
   private updateTrayMenu(): void {
     if (this.tray) {
       // Only update the context menu, don't recreate the entire tray
-      const contextMenu = Menu.buildFromTemplate([
-        {
-          label: 'Show Qobux',
-          click: () => {
-            this.showWindow();
-          }
-        },
-        {
-          label: 'Hide Qobux',
-          click: () => {
-            this.mainWindow?.hide();
-          }
-        },
-        { type: 'separator' },
-        {
-          label: 'Play/Pause',
-          click: () => {
-            this.sendMediaCommand('playpause');
-          }
-        },
-        {
-          label: 'Next Track',
-          click: () => {
-            this.sendMediaCommand('next');
-          }
-        },
-        {
-          label: 'Previous Track',
-          click: () => {
-            this.sendMediaCommand('previous');
-          }
-        },
-        { type: 'separator' },
-        {
-          label: 'Notifications',
-          type: 'checkbox',
-          checked: this.settings.notificationsEnabled,
-          click: () => {
-            this.settings.notificationsEnabled = !this.settings.notificationsEnabled;
-            this.saveSettings();
-            this.updateTrayMenu(); // Refresh menu to show new state
-          }
-        },
-        { type: 'separator' },
-        {
-          label: 'Quit',
-          click: () => {
-            app.isQuiting = true;
-            app.quit();
-          }
-        }
-      ]);
-
+      const contextMenu = Menu.buildFromTemplate(this.buildTrayMenuTemplate());
       this.tray.setContextMenu(contextMenu);
     }
   }
