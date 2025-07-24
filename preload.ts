@@ -1,5 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
+// Timing constants
+const DOM_READY_DELAY = 100;
+const TRACK_CHECK_DELAY = 1000;
+
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 try {
@@ -52,15 +56,15 @@ ipcRenderer.on('media-command', (_, command) => {
       case 'next':
         clickNextButtonDirect();
         // Check for track change after next
-        setTimeout(checkForTrackChange, 1000);
+        setTimeout(checkForTrackChange, TRACK_CHECK_DELAY);
         break;
       case 'previous':
         clickPreviousButtonDirect();
         // Check for track change after previous
-        setTimeout(checkForTrackChange, 1000);
+        setTimeout(checkForTrackChange, TRACK_CHECK_DELAY);
         break;
     }
-  }, 100); // Small delay to ensure DOM is ready
+  }, DOM_READY_DELAY); // Small delay to ensure DOM is ready
 });
 
 // Track change detection for notifications

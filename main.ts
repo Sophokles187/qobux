@@ -14,6 +14,10 @@ class QobuxApp {
   private static readonly MIN_WINDOW_WIDTH = 800;
   private static readonly MIN_WINDOW_HEIGHT = 600;
 
+  // Timing constants
+  private static readonly DOM_READY_DELAY = 100;
+  private static readonly TRACK_CHECK_DELAY = 1000;
+
   private mainWindow: BrowserWindow | null = null;
   private tray: Tray | null = null;
   private settings: AppSettings = { notificationsEnabled: true };
