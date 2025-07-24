@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2024 Qobux Contributors -->
+<component type="desktop-application">
+  <id>io.github.Sophokles187.qobux</id>
+  
+  <!-- Licenses -->
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+  
+  <!-- Basic Info -->
+  <name>Qobux</name>
+  <summary>Unofficial Qobuz Client for Linux</summary>
+  
+  <!-- Developer -->
+  <developer id="io.github.Sophokles187">
+    <name>Qobux Contributors</name>
+  </developer>
+  
+  <!-- Description -->
+  <description>
+    <p>
+      Qobux provides a native desktop experience for Qobuz streaming on Linux. 
+      This unofficial client wraps the Qobuz web application in an Electron-based 
+      desktop application with additional Linux-specific features.
+    </p>
+    <p>Features include:</p>
+    <ul>
+      <li>Native desktop integration with system tray</li>
+      <li>MPRIS support for media keys and desktop notifications</li>
+      <li>Window management (minimize to tray, restore)</li>
+      <li>Seamless access to your Qobuz music library</li>
+    </ul>
+    <p>
+      <em>Note:</em> This is an unofficial client and requires a valid Qobuz subscription. 
+      Audio quality is limited to CD quality (16-bit/44.1kHz) due to browser limitations.
+    </p>
+  </description>
+  
+  <!-- Desktop file -->
+  <launchable type="desktop-id">io.github.Sophokles187.qobux.desktop</launchable>
+  
+  <!-- Categories -->
+  <categories>
+    <category>AudioVideo</category>
+    <category>Audio</category>
+    <category>Music</category>
+  </categories>
+  
+  <!-- Keywords -->
+  <keywords>
+    <keyword>music</keyword>
+    <keyword>streaming</keyword>
+    <keyword>qobuz</keyword>
+    <keyword>audio</keyword>
+    <keyword>player</keyword>
+  </keywords>
+  
+  <!-- URLs -->
+  <url type="homepage">https://github.com/Sophokles187/qobux</url>
+  <url type="bugtracker">https://github.com/Sophokles187/qobux/issues</url>
+  <url type="vcs-browser">https://github.com/Sophokles187/qobux</url>
+  
+  <!-- Brand Colors (TODO: Define proper colors) -->
+  <branding>
+    <color type="primary" scheme_preference="light">#1a73e8</color>
+    <color type="primary" scheme_preference="dark">#4285f4</color>
+  </branding>
+  
+  <!-- Age Rating -->
+  <content_rating type="oars-1.1">
+    <!-- Music streaming app - generally safe for all ages -->
+  </content_rating>
+  
+  <!-- Device Support - Desktop focused -->
+  <requires>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <display_length compare="ge">768</display_length>
+  </requires>
+  
+  <!-- Screenshots (TODO: Add actual screenshots) -->
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/Sophokles187/qobux/main/screenshots/main-window.png</image>
+      <caption>Main application window showing Qobuz interface</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/Sophokles187/qobux/main/screenshots/tray-menu.png</image>
+      <caption>System tray integration with media controls</caption>
+    </screenshot>
+  </screenshots>
+  
+  <!-- Release Info (TODO: Update with actual releases) -->
+  <releases>
+    <release version="1.0.0" date="2024-07-24">
+      <description>
+        <p>Initial release of Qobux</p>
+        <ul>
+          <li>Basic Electron window with Qobuz web app</li>
+          <li>System tray icon with basic controls</li>
+          <li>Window management (minimize/restore)</li>
+          <li>MPRIS support for media keys</li>
+          <li>Desktop notifications</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+  
+  <!-- Translation support (if implemented) -->
+  <!-- <translation type="gettext">qobux</translation> -->
+  
+</component>

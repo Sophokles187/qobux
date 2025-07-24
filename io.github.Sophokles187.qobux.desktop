@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Qobux
+Comment=Unofficial Qobuz Client for Linux
+GenericName=Music Streaming Client
+Exec=qobux %U
+Icon=io.github.Sophokles187.qobux
+StartupNotify=true
+NoDisplay=false
+Categories=AudioVideo;Audio;Music;
+Keywords=music;streaming;qobuz;audio;player;
+MimeType=x-scheme-handler/qobuz;
+StartupWMClass=Qobux
