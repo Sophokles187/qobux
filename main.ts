@@ -18,6 +18,16 @@ class QobuxApp {
   private static readonly DOM_READY_DELAY = 100;
   private static readonly TRACK_CHECK_DELAY = 1000;
 
+  // UI Text constants
+  private static readonly MENU_SHOW = 'Show Qobux';
+  private static readonly MENU_HIDE = 'Hide Qobux';
+  private static readonly MENU_PLAY_PAUSE = 'Play/Pause';
+  private static readonly MENU_NEXT = 'Next Track';
+  private static readonly MENU_PREVIOUS = 'Previous Track';
+  private static readonly MENU_NOTIFICATIONS = 'Notifications';
+  private static readonly MENU_QUIT = 'Quit';
+  private static readonly TRAY_TOOLTIP = 'Qobux - Qobuz Desktop Client';
+
   private mainWindow: BrowserWindow | null = null;
   private tray: Tray | null = null;
   private settings: AppSettings = { notificationsEnabled: true };
@@ -194,7 +204,7 @@ class QobuxApp {
     const contextMenu = Menu.buildFromTemplate(this.buildTrayMenuTemplate());
 
     this.tray.setContextMenu(contextMenu);
-    this.tray.setToolTip('Qobux - Qobuz Desktop Client');
+    this.tray.setToolTip(QobuxApp.TRAY_TOOLTIP);
 
     // Handle tray click
     this.tray.on('click', () => {
@@ -205,39 +215,39 @@ class QobuxApp {
   private buildTrayMenuTemplate(): Electron.MenuItemConstructorOptions[] {
     return [
       {
-        label: 'Show Qobux',
+        label: QobuxApp.MENU_SHOW,
         click: () => {
           this.showWindow();
         }
       },
       {
-        label: 'Hide Qobux',
+        label: QobuxApp.MENU_HIDE,
         click: () => {
           this.mainWindow?.hide();
         }
       },
       { type: 'separator' as const },
       {
-        label: 'Play/Pause',
+        label: QobuxApp.MENU_PLAY_PAUSE,
         click: () => {
           this.sendMediaCommand('playpause');
         }
       },
       {
-        label: 'Next Track',
+        label: QobuxApp.MENU_NEXT,
         click: () => {
           this.sendMediaCommand('next');
         }
       },
       {
-        label: 'Previous Track',
+        label: QobuxApp.MENU_PREVIOUS,
         click: () => {
           this.sendMediaCommand('previous');
         }
       },
       { type: 'separator' as const },
       {
-        label: 'Notifications',
+        label: QobuxApp.MENU_NOTIFICATIONS,
         type: 'checkbox' as const,
         checked: this.settings.notificationsEnabled,
         click: () => {
@@ -248,7 +258,7 @@ class QobuxApp {
       },
       { type: 'separator' as const },
       {
-        label: 'Quit',
+        label: QobuxApp.MENU_QUIT,
         click: () => {
           app.isQuiting = true;
           app.quit();
