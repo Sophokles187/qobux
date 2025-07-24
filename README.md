@@ -13,30 +13,14 @@ Qobux provides a native desktop experience for Qobuz streaming on Linux, featuri
 
 ## Installation
 
-### Flatpak (Recommended)
-```bash
-# Install from local bundle
-flatpak install qobux.flatpak
+### Releases (Recommended)
+Download the latest release from [GitHub Releases](https://github.com/Sophokles187/qobux/releases):
 
-# Run the application
-flatpak run io.github.Sophokles187.qobux
-```
+- **Flatpak Bundle**: `flatpak install qobux.flatpak`
+- **AppImage**: `chmod +x Qobux-*.AppImage && ./Qobux-*.AppImage`
 
-### AppImage
-```bash
-# Download and run
-chmod +x Qobux-1.0.0.AppImage
-./Qobux-1.0.0.AppImage
-```
-
-### From Source
-```bash
-git clone https://github.com/Sophokles187/qobux.git
-cd qobux
-npm install
-npm run build
-npm start
-```
+### Development
+For local development and installation options, see [Installation Guide](docs/installation.md).
 
 ## Legal Notice
 
