@@ -110,6 +110,7 @@ class QobuxApp {
       minWidth: 800,
       minHeight: 600,
       icon: path.join(__dirname, '../assets/icon.png'),
+      autoHideMenuBar: true, // Hide the menu bar (File, Edit, View, etc.)
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
