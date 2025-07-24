@@ -32,7 +32,7 @@
     "wait-on": "^8.0.1"
   },
   "build": {
-    "appId": "com.qobux.app",
+    "appId": "io.github.Sophokles187.qobux",
     "productName": "Qobux",
     "directories": {
       "output": "release"
@@ -57,9 +57,9 @@
       "icon": "assets/icon.png"
     },
     "flatpak": {
-      "baseVersion": "23.08",
+      "baseVersion": "24.08",
       "runtime": "org.freedesktop.Platform",
-      "runtimeVersion": "23.08",
+      "runtimeVersion": "24.08",
       "sdk": "org.freedesktop.Sdk"
     }
   }
