@@ -7,15 +7,58 @@ interface AppSettings {
 }
 
 class QobuxApp {
+  // App constants
+  private static readonly QOBUZ_URL = 'https://play.qobuz.com';
+  private static readonly DEFAULT_WINDOW_WIDTH = 1200;
+  private static readonly DEFAULT_WINDOW_HEIGHT = 800;
+  private static readonly MIN_WINDOW_WIDTH = 800;
+  private static readonly MIN_WINDOW_HEIGHT = 600;
+
+  // Timing constants
+  private static readonly DOM_READY_DELAY = 100;
+  private static readonly TRACK_CHECK_DELAY = 1000;
+
+  // UI Text constants
+  private static readonly MENU_SHOW = 'Show Qobux';
+  private static readonly MENU_HIDE = 'Hide Qobux';
+  private static readonly MENU_PLAY_PAUSE = 'Play/Pause';
+  private static readonly MENU_NEXT = 'Next Track';
+  private static readonly MENU_PREVIOUS = 'Previous Track';
+  private static readonly MENU_NOTIFICATIONS = 'Notifications';
+  private static readonly MENU_QUIT = 'Quit';
+  private static readonly TRAY_TOOLTIP = 'Qobux - Qobuz Desktop Client';
+
+  // Media command constants
+  private static readonly CMD_PLAY_PAUSE = 'playpause';
+  private static readonly CMD_NEXT = 'next';
+  private static readonly CMD_PREVIOUS = 'previous';
+
+  // Icon path constants
+  private static readonly ICON_MAIN = '../assets/icon.png';
+  private static readonly ICON_TRAY = '../assets/tray-icon.png';
+
   private mainWindow: BrowserWindow | null = null;
   private tray: Tray | null = null;
   private settings: AppSettings = { notificationsEnabled: true };
-  private settingsPath: string;
+  private settingsPath!: string;
 
   constructor() {
+    this.initializeSettings();
+    this.setupApp();
+  }
+
+  private initializeSettings(): void {
     this.settingsPath = path.join(app.getPath('userData'), 'settings.json');
     this.loadSettings();
-    this.setupApp();
+  }
+
+  // Simple logging helpers
+  private log(message: string, ...args: any[]): void {
+    console.log(`[Qobux] ${message}`, ...args);
+  }
+
+  private logError(message: string, error?: any): void {
+    console.error(`[Qobux ERROR] ${message}`, error);
   }
 
   private loadSettings(): void {
@@ -23,9 +66,18 @@ class QobuxApp {
       if (fs.existsSync(this.settingsPath)) {
         const data = fs.readFileSync(this.settingsPath, 'utf8');
         this.settings = { ...this.settings, ...JSON.parse(data) };
+        this.log('Settings loaded successfully');
+      } else {
+        this.log('No settings file found, using defaults');
       }
     } catch (error) {
-      // Use defaults on error
+      if (error instanceof SyntaxError) {
+        this.logError('Settings file contains invalid JSON, using defaults', error);
+      } else if (error instanceof Error && error.message.includes('EACCES')) {
+        this.logError('Permission denied reading settings file, using defaults', error);
+      } else {
+        this.logError('Failed to load settings, using defaults', error);
+      }
     }
   }
 
@@ -33,7 +85,7 @@ class QobuxApp {
     try {
       fs.writeFileSync(this.settingsPath, JSON.stringify(this.settings, null, 2));
     } catch (error) {
-      console.error('Qobux: Could not save settings:', error);
+      this.logError('Could not save settings:', error);
     }
   }
 
@@ -63,7 +115,7 @@ class QobuxApp {
     // Security: Prevent new window creation
     app.on('web-contents-created', (event, contents) => {
       contents.setWindowOpenHandler(({ url }) => {
-        console.log('Blocked new window creation to:', url);
+        this.log('Blocked new window creation to:', url);
         return { action: 'deny' };
       });
     });
@@ -92,7 +144,7 @@ class QobuxApp {
       const notification = new Notification({
         title: title,
         body: body,
-        icon: path.join(__dirname, '../assets/icon.png'),
+        icon: path.join(__dirname, QobuxApp.ICON_MAIN),
         silent: false
       });
 
@@ -105,11 +157,11 @@ class QobuxApp {
   private createWindow(): void {
     // Create the browser window
     this.mainWindow = new BrowserWindow({
-      width: 1200,
-      height: 800,
-      minWidth: 800,
-      minHeight: 600,
-      icon: path.join(__dirname, '../assets/icon.png'),
+      width: QobuxApp.DEFAULT_WINDOW_WIDTH,
+      height: QobuxApp.DEFAULT_WINDOW_HEIGHT,
+      minWidth: QobuxApp.MIN_WINDOW_WIDTH,
+      minHeight: QobuxApp.MIN_WINDOW_HEIGHT,
+      icon: path.join(__dirname, QobuxApp.ICON_MAIN),
       autoHideMenuBar: true, // Hide the menu bar (File, Edit, View, etc.)
       webPreferences: {
         nodeIntegration: false,
@@ -121,7 +173,7 @@ class QobuxApp {
     });
 
     // Load the Qobuz web app
-    this.mainWindow.loadURL('https://play.qobuz.com');
+    this.mainWindow.loadURL(QobuxApp.QOBUZ_URL);
 
     // Show window when ready to prevent visual flash
     this.mainWindow.once('ready-to-show', () => {
@@ -152,67 +204,16 @@ class QobuxApp {
 
   private createTray(): void {
     // Create tray icon
-    const iconPath = path.join(__dirname, '../assets/tray-icon.png');
+    const iconPath = path.join(__dirname, QobuxApp.ICON_TRAY);
     const trayIcon = nativeImage.createFromPath(iconPath);
     
     this.tray = new Tray(trayIcon);
     
     // Create context menu
-    const contextMenu = Menu.buildFromTemplate([
-      {
-        label: 'Show Qobux',
-        click: () => {
-          this.showWindow();
-        }
-      },
-      {
-        label: 'Hide Qobux',
-        click: () => {
-          this.mainWindow?.hide();
-        }
-      },
-      { type: 'separator' },
-      {
-        label: 'Play/Pause',
-        click: () => {
-          this.sendMediaCommand('playpause');
-        }
-      },
-      {
-        label: 'Next Track',
-        click: () => {
-          this.sendMediaCommand('next');
-        }
-      },
-      {
-        label: 'Previous Track',
-        click: () => {
-          this.sendMediaCommand('previous');
-        }
-      },
-      { type: 'separator' },
-      {
-        label: 'Notifications',
-        type: 'checkbox',
-        checked: this.settings.notificationsEnabled,
-        click: () => {
-          this.settings.notificationsEnabled = !this.settings.notificationsEnabled;
-          this.saveSettings();
-          this.updateTrayMenu(); // Refresh menu to show new state
-        }
-      },
-      { type: 'separator' },
-      {
-        label: 'Quit',
-        click: () => {
-          app.isQuiting = true;
-          app.quit();
-        }
-      }
-    ]);
+    const contextMenu = Menu.buildFromTemplate(this.buildTrayMenuTemplate());
 
     this.tray.setContextMenu(contextMenu);
-    this.tray.setToolTip('Qobux - Qobuz Desktop Client');
+    this.tray.setToolTip(QobuxApp.TRAY_TOOLTIP);
 
     // Handle tray click
     this.tray.on('click', () => {
@@ -220,62 +221,65 @@ class QobuxApp {
     });
   }
 
+  private buildTrayMenuTemplate(): Electron.MenuItemConstructorOptions[] {
+    return [
+      {
+        label: QobuxApp.MENU_SHOW,
+        click: () => {
+          this.showWindow();
+        }
+      },
+      {
+        label: QobuxApp.MENU_HIDE,
+        click: () => {
+          this.mainWindow?.hide();
+        }
+      },
+      { type: 'separator' as const },
+      {
+        label: QobuxApp.MENU_PLAY_PAUSE,
+        click: () => {
+          this.sendMediaCommand(QobuxApp.CMD_PLAY_PAUSE);
+        }
+      },
+      {
+        label: QobuxApp.MENU_NEXT,
+        click: () => {
+          this.sendMediaCommand(QobuxApp.CMD_NEXT);
+        }
+      },
+      {
+        label: QobuxApp.MENU_PREVIOUS,
+        click: () => {
+          this.sendMediaCommand(QobuxApp.CMD_PREVIOUS);
+        }
+      },
+      { type: 'separator' as const },
+      {
+        label: QobuxApp.MENU_NOTIFICATIONS,
+        type: 'checkbox' as const,
+        checked: this.settings.notificationsEnabled,
+        click: () => {
+          this.settings.notificationsEnabled = !this.settings.notificationsEnabled;
+          this.saveSettings();
+          this.updateTrayMenu(); // Refresh menu to show new state
+        }
+      },
+      { type: 'separator' as const },
+      {
+        label: QobuxApp.MENU_QUIT,
+        click: () => {
+          app.isQuiting = true;
+          app.quit();
+        }
+      }
+    ];
+  }
+
   private updateTrayMenu(): void {
     if (this.tray) {
       // Only update the context menu, don't recreate the entire tray
-      const contextMenu = Menu.buildFromTemplate([
-        {
-          label: 'Show Qobux',
-          click: () => {
-            this.showWindow();
-          }
-        },
-        {
-          label: 'Hide Qobux',
-          click: () => {
-            this.mainWindow?.hide();
-          }
-        },
-        { type: 'separator' },
-        {
-          label: 'Play/Pause',
-          click: () => {
-            this.sendMediaCommand('playpause');
-          }
-        },
-        {
-          label: 'Next Track',
-          click: () => {
-            this.sendMediaCommand('next');
-          }
-        },
-        {
-          label: 'Previous Track',
-          click: () => {
-            this.sendMediaCommand('previous');
-          }
-        },
-        { type: 'separator' },
-        {
-          label: 'Notifications',
-          type: 'checkbox',
-          checked: this.settings.notificationsEnabled,
-          click: () => {
-            this.settings.notificationsEnabled = !this.settings.notificationsEnabled;
-            this.saveSettings();
-            this.updateTrayMenu(); // Refresh menu to show new state
-          }
-        },
-        { type: 'separator' },
-        {
-          label: 'Quit',
-          click: () => {
-            app.isQuiting = true;
-            app.quit();
-          }
-        }
-      ]);
-
+      const contextMenu = Menu.buildFromTemplate(this.buildTrayMenuTemplate());
       this.tray.setContextMenu(contextMenu);
     }
   }

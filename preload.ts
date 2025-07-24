@@ -1,5 +1,14 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
+// Timing constants
+const DOM_READY_DELAY = 100;
+const TRACK_CHECK_DELAY = 1000;
+
+// Media command constants
+const CMD_PLAY_PAUSE = 'playpause';
+const CMD_NEXT = 'next';
+const CMD_PREVIOUS = 'previous';
+
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 try {
@@ -46,21 +55,21 @@ ipcRenderer.on('media-command', (_, command) => {
   // Execute DOM manipulation directly
   setTimeout(() => {
     switch (command) {
-      case 'playpause':
+      case CMD_PLAY_PAUSE:
         clickPlayButtonDirect();
         break;
-      case 'next':
+      case CMD_NEXT:
         clickNextButtonDirect();
         // Check for track change after next
-        setTimeout(checkForTrackChange, 1000);
+        setTimeout(checkForTrackChange, TRACK_CHECK_DELAY);
         break;
-      case 'previous':
+      case CMD_PREVIOUS:
         clickPreviousButtonDirect();
         // Check for track change after previous
-        setTimeout(checkForTrackChange, 1000);
+        setTimeout(checkForTrackChange, TRACK_CHECK_DELAY);
         break;
     }
-  }, 100); // Small delay to ensure DOM is ready
+  }, DOM_READY_DELAY); // Small delay to ensure DOM is ready
 });
 
 // Track change detection for notifications
