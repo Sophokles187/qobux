@@ -7,6 +7,13 @@ interface AppSettings {
 }
 
 class QobuxApp {
+  // App constants
+  private static readonly QOBUZ_URL = 'https://play.qobuz.com';
+  private static readonly DEFAULT_WINDOW_WIDTH = 1200;
+  private static readonly DEFAULT_WINDOW_HEIGHT = 800;
+  private static readonly MIN_WINDOW_WIDTH = 800;
+  private static readonly MIN_WINDOW_HEIGHT = 600;
+
   private mainWindow: BrowserWindow | null = null;
   private tray: Tray | null = null;
   private settings: AppSettings = { notificationsEnabled: true };
@@ -105,10 +112,10 @@ class QobuxApp {
   private createWindow(): void {
     // Create the browser window
     this.mainWindow = new BrowserWindow({
-      width: 1200,
-      height: 800,
-      minWidth: 800,
-      minHeight: 600,
+      width: QobuxApp.DEFAULT_WINDOW_WIDTH,
+      height: QobuxApp.DEFAULT_WINDOW_HEIGHT,
+      minWidth: QobuxApp.MIN_WINDOW_WIDTH,
+      minHeight: QobuxApp.MIN_WINDOW_HEIGHT,
       icon: path.join(__dirname, '../assets/icon.png'),
       autoHideMenuBar: true, // Hide the menu bar (File, Edit, View, etc.)
       webPreferences: {
@@ -121,7 +128,7 @@ class QobuxApp {
     });
 
     // Load the Qobuz web app
-    this.mainWindow.loadURL('https://play.qobuz.com');
+    this.mainWindow.loadURL(QobuxApp.QOBUZ_URL);
 
     // Show window when ready to prevent visual flash
     this.mainWindow.once('ready-to-show', () => {
