@@ -35,7 +35,8 @@ class QobuxApp {
 
   // Icon path constants
   private static readonly ICON_MAIN = '../assets/icon.png';
-  private static readonly ICON_TRAY = '../assets/tray-icon.png';
+  private static readonly ICON_TRAY_WHITE = '../assets/tray-icon-white.png';
+  private static readonly ICON_TRAY_BLACK = '../assets/tray-icon-black.png';
 
   private mainWindow: BrowserWindow | null = null;
   private tray: Tray | null = null;
@@ -167,7 +168,9 @@ class QobuxApp {
         nodeIntegration: false,
         contextIsolation: true,
         preload: path.join(__dirname, 'preload.js'),
-        webSecurity: true
+        webSecurity: true,
+        plugins: true, // Enable plugins for Widevine DRM
+        experimentalFeatures: true // Enable experimental web features for Hi-Res audio
       },
       show: false // Don't show until ready-to-show
     });
@@ -203,12 +206,12 @@ class QobuxApp {
   }
 
   private createTray(): void {
-    // Create tray icon
-    const iconPath = path.join(__dirname, QobuxApp.ICON_TRAY);
+    // Create tray icon with theme-appropriate color
+    const iconPath = this.getTrayIconPath();
     const trayIcon = nativeImage.createFromPath(iconPath);
-    
+
     this.tray = new Tray(trayIcon);
-    
+
     // Create context menu
     const contextMenu = Menu.buildFromTemplate(this.buildTrayMenuTemplate());
 
@@ -219,6 +222,73 @@ class QobuxApp {
     this.tray.on('click', () => {
       this.toggleWindow();
     });
+  }
+
+  private getTrayIconPath(): string {
+    // Try to detect system theme preference
+    // On Linux, check if we can determine the theme
+    if (process.platform === 'linux') {
+      try {
+        // Check for dark theme indicators
+        const isDarkTheme = this.isSystemDarkTheme();
+        const iconFile = isDarkTheme ? QobuxApp.ICON_TRAY_WHITE : QobuxApp.ICON_TRAY_BLACK;
+        return path.join(__dirname, iconFile);
+      } catch (error) {
+        this.log('Could not detect system theme, using white icon as default');
+      }
+    }
+
+    // Default to white icon (works on most dark panels)
+    return path.join(__dirname, QobuxApp.ICON_TRAY_WHITE);
+  }
+
+  private isSystemDarkTheme(): boolean {
+    // On Linux, try to detect dark theme through various methods
+    if (process.platform === 'linux') {
+      try {
+        // Method 1: Check GTK theme preference
+        const { execSync } = require('child_process');
+
+        // Try gsettings for GNOME/GTK
+        try {
+          const gtkTheme = execSync('gsettings get org.gnome.desktop.interface gtk-theme 2>/dev/null',
+            { encoding: 'utf8', timeout: 1000 }).trim();
+          if (gtkTheme.toLowerCase().includes('dark')) {
+            return true;
+          }
+        } catch (e) {
+          // gsettings not available or failed
+        }
+
+        // Method 2: Check for dark theme preference
+        try {
+          const colorScheme = execSync('gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null',
+            { encoding: 'utf8', timeout: 1000 }).trim();
+          if (colorScheme.includes('dark')) {
+            return true;
+          }
+        } catch (e) {
+          // color-scheme setting not available
+        }
+
+        // Method 3: Check KDE theme (for KDE users)
+        try {
+          const kdeTheme = execSync('kreadconfig5 --group General --key ColorScheme 2>/dev/null',
+            { encoding: 'utf8', timeout: 1000 }).trim();
+          if (kdeTheme.toLowerCase().includes('dark')) {
+            return true;
+          }
+        } catch (e) {
+          // KDE not available or failed
+        }
+      } catch (error) {
+        // All detection methods failed
+      }
+    }
+
+    // Default assumption: most Linux desktop environments use dark panels
+    // So white icons are usually the safer choice
+    return true;
   }
 
   private buildTrayMenuTemplate(): Electron.MenuItemConstructorOptions[] {
