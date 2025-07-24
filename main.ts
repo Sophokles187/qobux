@@ -28,6 +28,11 @@ class QobuxApp {
   private static readonly MENU_QUIT = 'Quit';
   private static readonly TRAY_TOOLTIP = 'Qobux - Qobuz Desktop Client';
 
+  // Media command constants
+  private static readonly CMD_PLAY_PAUSE = 'playpause';
+  private static readonly CMD_NEXT = 'next';
+  private static readonly CMD_PREVIOUS = 'previous';
+
   private mainWindow: BrowserWindow | null = null;
   private tray: Tray | null = null;
   private settings: AppSettings = { notificationsEnabled: true };
@@ -230,19 +235,19 @@ class QobuxApp {
       {
         label: QobuxApp.MENU_PLAY_PAUSE,
         click: () => {
-          this.sendMediaCommand('playpause');
+          this.sendMediaCommand(QobuxApp.CMD_PLAY_PAUSE);
         }
       },
       {
         label: QobuxApp.MENU_NEXT,
         click: () => {
-          this.sendMediaCommand('next');
+          this.sendMediaCommand(QobuxApp.CMD_NEXT);
         }
       },
       {
         label: QobuxApp.MENU_PREVIOUS,
         click: () => {
-          this.sendMediaCommand('previous');
+          this.sendMediaCommand(QobuxApp.CMD_PREVIOUS);
         }
       },
       { type: 'separator' as const },
