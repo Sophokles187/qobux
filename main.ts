@@ -33,6 +33,10 @@ class QobuxApp {
   private static readonly CMD_NEXT = 'next';
   private static readonly CMD_PREVIOUS = 'previous';
 
+  // Icon path constants
+  private static readonly ICON_MAIN = '../assets/icon.png';
+  private static readonly ICON_TRAY = '../assets/tray-icon.png';
+
   private mainWindow: BrowserWindow | null = null;
   private tray: Tray | null = null;
   private settings: AppSettings = { notificationsEnabled: true };
@@ -140,7 +144,7 @@ class QobuxApp {
       const notification = new Notification({
         title: title,
         body: body,
-        icon: path.join(__dirname, '../assets/icon.png'),
+        icon: path.join(__dirname, QobuxApp.ICON_MAIN),
         silent: false
       });
 
@@ -157,7 +161,7 @@ class QobuxApp {
       height: QobuxApp.DEFAULT_WINDOW_HEIGHT,
       minWidth: QobuxApp.MIN_WINDOW_WIDTH,
       minHeight: QobuxApp.MIN_WINDOW_HEIGHT,
-      icon: path.join(__dirname, '../assets/icon.png'),
+      icon: path.join(__dirname, QobuxApp.ICON_MAIN),
       autoHideMenuBar: true, // Hide the menu bar (File, Edit, View, etc.)
       webPreferences: {
         nodeIntegration: false,
@@ -200,7 +204,7 @@ class QobuxApp {
 
   private createTray(): void {
     // Create tray icon
-    const iconPath = path.join(__dirname, '../assets/tray-icon.png');
+    const iconPath = path.join(__dirname, QobuxApp.ICON_TRAY);
     const trayIcon = nativeImage.createFromPath(iconPath);
     
     this.tray = new Tray(trayIcon);
