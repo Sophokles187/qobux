@@ -6,9 +6,9 @@ An unofficial desktop client for the Qobuz music streaming service, built with E
 
 Qobux provides a native desktop experience for Qobuz streaming on Linux, featuring:
 
-- [x] Basic Electron window with Qobuz web app
-- [x] System tray icon with basic controls  
-- [x] Window management (minimize/restore)
+- [x] Electron window with Qobuz web app
+- [x] System tray icon with media controls  
+- [x] Window management (minimize to tray/restore)
 - [x] MPRIS support for media keys
 - [x] Desktop notifications
 
@@ -22,12 +22,6 @@ Planned distribution methods:
 - **AUR** package for Arch Linux users
 
 
-## Audio Quality
-
-- **Supported:** CD Quality (16-bit/44.1kHz) via Qobuz Web Player
-- **Limitation:** Hi-Res Audio (24-bit/192kHz) not supported due to browser limitations
-- **Future:** Native Hi-Res support planned for future versions
-
 ## Flathub Preparation
 
 This project is being prepared for Flathub distribution. Current status:
@@ -37,13 +31,6 @@ This project is being prepared for Flathub distribution. Current status:
 - Runtime: `org.freedesktop.Platform 24.08`
 - GPL-3.0 License
 - GitHub repository
-
-### 📝 TODO for Flathub:
-- [ ] Create screenshots for MetaInfo file
-- [ ] Update brand colors in MetaInfo
-- [ ] Create proper application icon (distinct from Qobuz branding)
-- [ ] Create Flatpak manifest
-- [ ] Test Flatpak build process
 
 ## Legal Notice
 
