@@ -17,12 +17,16 @@ class QobuxApp {
   private mainWindow: BrowserWindow | null = null;
   private tray: Tray | null = null;
   private settings: AppSettings = { notificationsEnabled: true };
-  private settingsPath: string;
+  private settingsPath!: string;
 
   constructor() {
+    this.initializeSettings();
+    this.setupApp();
+  }
+
+  private initializeSettings(): void {
     this.settingsPath = path.join(app.getPath('userData'), 'settings.json');
     this.loadSettings();
-    this.setupApp();
   }
 
   private loadSettings(): void {
