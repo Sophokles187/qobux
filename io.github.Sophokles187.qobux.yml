@@ -15,6 +15,7 @@ finish-args:
   # X11 and Wayland display
   - --socket=x11
   - --socket=wayland
+  - --share=ipc
   # GPU acceleration
   - --device=dri
   # System tray access
@@ -22,7 +23,6 @@ finish-args:
   - --talk-name=org.freedesktop.Notifications
   # MPRIS media control
   - --own-name=org.mpris.MediaPlayer2.qobux
-  - --talk-name=org.freedesktop.DBus
   # File system access for downloads/settings
   - --filesystem=xdg-download
   - --filesystem=xdg-music:ro

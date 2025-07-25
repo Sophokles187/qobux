@@ -1,0 +1,8 @@
+{
+  "skip-appstream-check": false,
+  "skip-icons-check": false,
+  "disable-external-data-checker": false,
+  "automerge-flathubbot-prs": false,
+  "end-of-life": null,
+  "end-of-life-rebase": null
+}
