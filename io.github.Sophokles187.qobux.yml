@@ -34,8 +34,6 @@ finish-args:
   - --talk-name=org.freedesktop.impl.portal.desktop.kde
   - --talk-name=org.freedesktop.impl.portal.desktop.gtk
   - --talk-name=org.freedesktop.portal.Desktop
-  # Input device access for media keys
-  - --device=input
   # File system access for downloads/settings
   - --filesystem=xdg-download
   - --filesystem=xdg-music:ro
