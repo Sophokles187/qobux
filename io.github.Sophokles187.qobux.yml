@@ -23,6 +23,19 @@ finish-args:
   - --talk-name=org.freedesktop.Notifications
   # MPRIS media control
   - --own-name=org.mpris.MediaPlayer2.qobux
+  # Media keys and session control - comprehensive permissions
+  - --socket=session-bus
+  - --talk-name=org.gnome.SessionManager
+  - --talk-name=org.freedesktop.login1
+  - --system-talk-name=org.freedesktop.login1
+  - --talk-name=org.gnome.SettingsDaemon
+  - --talk-name=org.gnome.SettingsDaemon.MediaKeys
+  - --talk-name=org.kde.kglobalaccel
+  - --talk-name=org.freedesktop.impl.portal.desktop.kde
+  - --talk-name=org.freedesktop.impl.portal.desktop.gtk
+  - --talk-name=org.freedesktop.portal.Desktop
+  # Input device access for media keys
+  - --device=input
   # File system access for downloads/settings
   - --filesystem=xdg-download
   - --filesystem=xdg-music:ro

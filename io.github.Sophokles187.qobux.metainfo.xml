@@ -90,6 +90,16 @@
   
   <!-- Release Info (TODO: Update with actual releases) -->
   <releases>
+    <release version="1.0.1" date="2024-07-25">
+      <description>
+        <p>Media keys bugfix for Flatpak</p>
+        <ul>
+          <li>Fixed media keys not working in Flatpak version</li>
+          <li>Added comprehensive Flatpak permissions for media control</li>
+          <li>Improved desktop integration</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.0" date="2024-07-24">
       <description>
         <p>Initial release of Qobux</p>

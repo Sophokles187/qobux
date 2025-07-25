@@ -1,6 +1,6 @@
 {
   "name": "qobux",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An unofficial desktop client for the Qobuz music streaming service, built with Electron for Linux",
   "main": "dist/main.js",
   "scripts": {
