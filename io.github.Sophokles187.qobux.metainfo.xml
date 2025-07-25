@@ -32,7 +32,7 @@
     </ul>
     <p>
       <em>Note:</em> This is an unofficial client and requires a valid Qobuz subscription. 
-      Audio quality is limited to CD quality (16-bit/44.1kHz) due to browser limitations.
+      
     </p>
   </description>
   
@@ -72,21 +72,19 @@
   </content_rating>
   
   <!-- Device Support - Desktop focused -->
-  <requires>
+  <recommends>
     <control>keyboard</control>
     <control>pointing</control>
+  </recommends>
+  <requires>
     <display_length compare="ge">768</display_length>
   </requires>
   
-  <!-- Screenshots (TODO: Add actual screenshots) -->
+  <!-- Screenshots -->
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/Sophokles187/qobux/main/screenshots/main-window.png</image>
+      <image>https://raw.githubusercontent.com/Sophokles187/qobux/main/screenshots/qobux_screenshot.png</image>
       <caption>Main application window showing Qobuz interface</caption>
-    </screenshot>
-    <screenshot>
-      <image>https://raw.githubusercontent.com/Sophokles187/qobux/main/screenshots/tray-menu.png</image>
-      <caption>System tray integration with media controls</caption>
     </screenshot>
   </screenshots>
   
